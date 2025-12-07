@@ -1,6 +1,6 @@
 """
-Аналіз алгоритмів сортування: Insertion Sort, Merge Sort та Timsort.
-Порівняння часу виконання.
+Sorting algorithms analysis: Insertion Sort, Merge Sort, and Timsort.
+Execution time comparison.
 """
 import timeit
 import json
@@ -54,7 +54,7 @@ def generate_test_data(size: int, data_type: str = "random") -> list[int]:
             data[i], data[j] = data[j], data[i]
         return data
     else:
-        raise ValueError(f"Невідомий тип даних: {data_type}")
+        raise ValueError(f"Unknown data type: {data_type}")
 
 
 def run_analysis(
@@ -76,7 +76,7 @@ def run_analysis(
     for size in sizes:
         data = generate_test_data(size, data_type)
         
-        # Insertion Sort (пропускаємо для великих масивів)
+        # Insertion Sort (skip for large arrays)
         insertion_time = measure_time(insertion_sort, data, repeats)
         results["insertion_sort"].append(insertion_time)
         
@@ -84,7 +84,7 @@ def run_analysis(
         merge_time = measure_time(merge_sort, data, repeats)
         results["merge_sort"].append(merge_time)
         
-        # Timsort (вбудований sorted)
+        # Timsort (built-in sorted)
         timsort_time = measure_timsort(data, repeats)
         results["timsort"].append(timsort_time)
     
@@ -108,89 +108,6 @@ def save_results(all_results: dict, save_path: str = "results/results.json"):
     
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
-
-    conclusions = """
-
- ТЕОРЕТИЧНА СКЛАДНІСТЬ:
-   - Insertion Sort: O(n²) — найгірший і середній випадок
-   - Merge Sort: O(n log n) — у всіх випадках
-   - Timsort: O(n log n) — найгірший, O(n) — найкращий (для майже відсортованих)
-
- Результати:
-"""
-    
-    # Аналіз результатів для random даних
-    if "random" in all_results:
-        random_results = all_results["random"]
-        sizes = random_results["sizes"]
-        
-        # Порівняння на найбільшому розмірі де є всі три алгоритми
-        valid_idx = -1
-        for i in range(len(sizes) - 1, -1, -1):
-            if random_results["insertion_sort"][i] is not None:
-                valid_idx = i
-                break
-        
-        if valid_idx >= 0:
-            size = sizes[valid_idx]
-            ins_time = random_results["insertion_sort"][valid_idx]
-            merge_time = random_results["merge_sort"][valid_idx]
-            tim_time = random_results["timsort"][valid_idx]
-            
-            speedup_ins_vs_tim = ins_time / tim_time if tim_time > 0 else 0
-            speedup_merge_vs_tim = merge_time / tim_time if tim_time > 0 else 0
-            
-            conclusions += f"""
-   На масиві розміром {size} (випадкові дані):
-   - Insertion Sort: {ins_time:.6f} сек
-   - Merge Sort:     {merge_time:.6f} сек
-   - Timsort:        {tim_time:.6f} сек
-
-    Timsort швидший за Insertion Sort у {speedup_ins_vs_tim:.1f}x разів
-    Timsort швидший за Merge Sort у {speedup_merge_vs_tim:.1f}x разів
-"""
-
-    # Аналіз для відсортованих даних
-    if "sorted" in all_results:
-        sorted_results = all_results["sorted"]
-        sizes = sorted_results["sizes"]
-        
-        # Знаходимо індекс з максимальним розміром
-        max_idx = len(sizes) - 1
-        merge_time = sorted_results["merge_sort"][max_idx]
-        tim_time = sorted_results["timsort"][max_idx]
-        
-        conclusions += f"""
-   На вже відсортованому масиві (розмір {sizes[max_idx]}):
-   - Merge Sort: {merge_time:.6f} сек
-   - Timsort:    {tim_time:.6f} сек
-"""
-
-    conclusions += """
-🔑 КЛЮЧОВІ ВИСНОВКИ:
-
-1. TIMSORT — НАЙЕФЕКТИВНІШИЙ для практичного використання:
-   • Поєднує переваги Merge Sort (стабільність, O(n log n)) та 
-     Insertion Sort (ефективність на малих масивах і майже відсортованих)
-   • Використовує "runs" — знаходить природні послідовності в даних
-   • Адаптивний: O(n) на відсортованих, O(n log n) на випадкових даних
-
-2. MERGE SORT — надійний, але не оптимальний:
-   • Гарантований O(n log n), але потребує додаткової пам'яті O(n)
-   • Не використовує структуру вхідних даних
-
-3. INSERTION SORT — ефективний лише для малих масивів:
-   • O(n²) робить його непридатним для великих даних
-   • Але O(n) на майже відсортованих — тому Timsort його використовує!
-
-💡 ПРАКТИЧНА РЕКОМЕНДАЦІЯ:
-   Завжди використовуйте вбудовані sorted() або list.sort() в Python.
-   Вони оптимізовані на рівні C і використовують Timsort.
-   Власні реалізації сортування варто писати лише в навчальних цілях.
-
-══════════════════════════════════════════════════════════════════════════════
-"""
-    return conclusions
 
 def main():    
     sizes = [100, 500, 1000, 2000, 5000, 10000]

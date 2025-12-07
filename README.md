@@ -1,36 +1,36 @@
-# Аналіз алгоритмів сортування
+# Sorting Algorithms Analysis
 
-Порівняльний аналіз трьох алгоритмів сортування: **Insertion Sort**, **Merge Sort** та **Timsort**.
+Comparative analysis of three sorting algorithms: **Insertion Sort**, **Merge Sort**, and **Timsort**.
 
-## Емпіричні результати
+## Empirical Results
 
-Результати тестування знаходяться у папці `results/`:
+Test results are located in the `results/` folder:
 
-- `results.json` — числові дані вимірювань
+- `results.json` — numerical measurement data
 
-## Ключові висновки
+## Key Conclusions
 
-### 1. Timsort — найефективніший для практичного використання
+### 1. Timsort — Most Efficient for Practical Use
 
-- Поєднує переваги Merge Sort (стабільність, O(n log n)) та Insertion Sort (ефективність на малих масивах)
-- Використовує "runs" — знаходить природні відсортовані послідовності в даних
-- Адаптивний: O(n) на відсортованих даних, O(n log n) на випадкових
+- Combines advantages of Merge Sort (stability, O(n log n)) and Insertion Sort (efficiency on small arrays)
+- Uses "runs" — finds natural sorted sequences in data
+- Adaptive: O(n) on sorted data, O(n log n) on random data
 
-### 2. Merge Sort — надійний, але не оптимальний
+### 2. Merge Sort — Reliable, But Not Optimal
 
-- Гарантований O(n log n) у всіх випадках
-- Потребує додаткової пам'яті O(n)
-- Не використовує особливості структури вхідних даних
+- Guaranteed O(n log n) in all cases
+- Requires additional O(n) memory
+- Does not utilize characteristics of input data structure
 
-### 3. Insertion Sort — лише для малих масивів
+### 3. Insertion Sort — Only for Small Arrays
 
-- O(n²) робить його непридатним для великих даних
-- O(n) на майже відсортованих
+- O(n²) makes it unsuitable for large data
+- O(n) on nearly sorted data
 
-## 🚀 Запуск
+## 🚀 Usage
 
 ```bash
 python sort_analysis.py
 ```
 
-Результати будуть збережені у папці `results/`.
+Results will be saved in the `results/` folder.
